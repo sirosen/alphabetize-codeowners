@@ -1,0 +1,19 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "alphabetize-codeowners"
+authors = [{name = "Stephen Rosen", email = "sirosen@globus.org"}]
+license = {file = "LICENSE"}
+classifiers = ["License :: OSI Approved :: MIT License"]
+dynamic = ["version", "description"]
+
+[project.urls]
+Home = "https://github.com/sirosen/alphabetize-codeowners"
+
+[project.scripts]
+alphabetize-codeowners = "alphabetize_codeowners:main"
+
+[tool.flit.module]
+name = "alphabetize_codeowners"
