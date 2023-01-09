@@ -16,26 +16,31 @@ __version__ = "0.0.1"
 WS_PAT = re.compile(r"\s+")
 
 
-def sort_line(line: str) -> str:
-    # also normalizes whitespace
-    dedented = line.lstrip()
-    elements = WS_PAT.split(dedented)
-    path = elements[0]
-    owners = sorted(elements[1:])
-    return " ".join([path] + owners)
-
-
 def main() -> None:
     # argparser stub for now
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
+    parser.add_argument(
+        "FILES", nargs="*", help="codeowners file (defaults to .github/CODEOWNERS)"
+    )
     parser.add_argument("-v", "--verbose", help="enable verbose mode", action="count")
     args = parser.parse_args()
 
-    co_path = pathlib.Path(".github/CODEOWNERS")
+    filenames = list(args.FILES)
+    if not filenames:
+        filenames = [".github/CODEOWNERS"]
+
+    exit_code = 0
+    for fname in filenames:
+        exit_code |= handle_file(fname, verbose=bool(args.verbose))
+    sys.exit(exit_code)
+
+
+def handle_file(fname: str, *, verbose: bool) -> int:
+    co_path = pathlib.Path(fname)
     if not co_path.exists():
-        print("cannot run hook, CODEOWNERS does not exist", file=sys.stderr)
+        print(f"'{fname}' does not exist", file=sys.stderr)
         sys.exit(2)
 
     content = co_path.read_text()
@@ -51,13 +56,22 @@ def main() -> None:
     co_path.write_text(new_content)
 
     if new_content != content:
-        if args.verbose:
+        if verbose:
             print("modified codeowners")
-        sys.exit(1)
-    else:
-        if args.verbose:
-            print("ok")
-        sys.exit(0)
+        return 1
+
+    if verbose:
+        print("ok")
+    return 0
+
+
+def sort_line(line: str) -> str:
+    # also normalizes whitespace
+    dedented = line.lstrip()
+    elements = WS_PAT.split(dedented)
+    path = elements[0]
+    owners = sorted(elements[1:])
+    return " ".join([path] + owners)
 
 
 if __name__ == "__main__":
