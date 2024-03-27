@@ -70,7 +70,7 @@ def sort_line(line: str) -> str:
     dedented = line.lstrip()
     elements = WS_PAT.split(dedented)
     path = elements[0]
-    owners = sorted(elements[1:])
+    owners = sorted(elements[1:], key=str.lower)
     return " ".join([path] + owners)
 
 
