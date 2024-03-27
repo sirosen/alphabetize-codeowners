@@ -1,3 +1,9 @@
+# DEPRECATION NOTICE
+
+This repository has been deprecated. Use https://github.com/sirosen/texthooks instead.
+
+A newer version of `alphabetize-codeowners` is maintained there.
+
 # alphabetize-codeowners
 
 For teams with lists of users attached to different paths, comparison of
