@@ -8,12 +8,9 @@ lines
 
 import argparse
 import pathlib
-import re
 import sys
 
 __version__ = "0.0.1"
-
-WS_PAT = re.compile(r"\s+")
 
 
 def main() -> None:
@@ -68,7 +65,7 @@ def handle_file(fname: str, *, verbose: bool) -> int:
 def sort_line(line: str) -> str:
     # also normalizes whitespace
     dedented = line.lstrip()
-    elements = WS_PAT.split(dedented)
+    elements = dedented.split()
     path = elements[0]
     owners = sorted(elements[1:], key=str.lower)
     return " ".join([path] + owners)
